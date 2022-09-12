@@ -1,5 +1,3 @@
-require 'pry'
-
 class CashRegister
 
   attr_accessor  :total, :items, :last_transaction
@@ -20,7 +18,7 @@ class CashRegister
 
   def apply_discount
     if @discount > 0 && @discount <= 100 then
-      self.total = @total * ( 1.0 - @discount / 100.0 )
+      self.total = @total * ( 1.00 - @discount / 100.00 )
       return "After the discount, the total comes to $#{self.total.to_i}."
     else
       return "There is no discount to apply."
@@ -34,7 +32,3 @@ class CashRegister
   end
 
 end
-
-# cash_register_with_discount = CashRegister.new(20)
-# cash_register_with_discount.add_item("expensive", 1000)
-# cash_register_with_discount.apply_discount

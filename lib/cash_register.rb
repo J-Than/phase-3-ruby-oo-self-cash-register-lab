@@ -2,32 +2,35 @@ require 'pry'
 
 class CashRegister
 
-  attr_accessor  :total, :prior_total, :pre_discount_total, :items
+  attr_accessor  :total, :items, :last_transaction
   attr_reader :discount
-  attr_writer :z
 
   def initialize(discount = 0)
     @discount = discount
-    @pre_discount_total = 0
-    @prior_total = 0
-    @total = 0
+    @last_transaction = []
     @items = []
+    @total = 0
   end
 
   def add_item(item_name, price, quantity = 1)
-    self.prior_total = @pre_discount_total
-    self.pre_discount_total += price * quantity
-    self.total = @pre_discount_total
-    self.items.push(item_name)
+    self.total += price * quantity
+    quantity.times { self.items.push(item_name) }
+    self.last_transaction = [item_name, price, quantity]
   end
 
   def apply_discount
     if @discount > 0 && @discount <= 100 then
-      self.total = @pre_discount_total * ( 1.0 - @discount / 100.0 )
+      self.total = @total * ( 1.0 - @discount / 100.0 )
       return "After the discount, the total comes to $#{self.total.to_i}."
     else
       return "There is no discount to apply."
     end
+  end
+
+  def void_last_transaction
+    self.total -= @last_transaction[1] * @last_transaction[2]
+    @last_transaction[2].times { self.items.pop }
+    self.last_transaction = []
   end
 
 end
